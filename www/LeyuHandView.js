@@ -41,3 +41,13 @@ exports.freezeScreen = function(success, error) {
 exports.unFreezeScreen = function(success, error) {
     exec(success, error, "LeyuHandView", "unFreezeScreen");
 };
+
+// 设置画笔
+exports.setPenWidth = function(arg0, success, error) {
+    exec(success, error, "LeyuHandView", "setPenWidth", [arg0]);
+}
+
+// 设置橡皮檫
+exports.setRubberWidth = function(arg0, success, error) {
+    exec(success, error, "LeyuHandView", "setRubberWidth", [arg0]);
+}
