@@ -141,6 +141,21 @@ public class LeyuHandView extends CordovaPlugin {
             this.setRubberWidth(callbackContext, width);
             return true;
         }
+
+        // 11.提供添加 point 接口
+        if (action.equals("addPoint")) {
+            //int width = args.getInt(0);
+            int penColor = args.getInt(0);
+            JSONArray jsonArray = args.getJSONArray(1);
+            JSONObject jsonObject;
+            for (int i=0; i<jsonArray.length(); i++) {
+                jsonObject = jsonArray.getJSONObject(i);
+                Log.i(TAG, "penColor:"+penColor+"  /jsonObject:"+jsonObject.toString());
+            }
+            //jsonArray.getString()
+            //this.setRubberWidth(callbackContext, width);
+            return true;
+        }
         //lishunbo@leyu-tech.com add 2020/8/12 for  end
 
         return false;
