@@ -148,9 +148,26 @@ public class LeyuHandView extends CordovaPlugin {
             int penColor = args.getInt(0);
             JSONArray jsonArray = args.getJSONArray(1);
             JSONObject jsonObject;
-            for (int i=0; i<jsonArray.length(); i++) {
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < jsonArray.length(); i++) {
                 jsonObject = jsonArray.getJSONObject(i);
-                Log.i(TAG, "penColor:"+penColor+"  /jsonObject:"+jsonObject.toString());
+                //Log.i(TAG, "penColor:" + penColor + "  /jsonObject:" + jsonObject.toString());
+
+                sb.append(jsonObject.getInt(RkHandWriteUtils.JSON_KEY_LAST_X)).append(",");
+                sb.append(jsonObject.getInt(RkHandWriteUtils.JSON_KEY_LAST_Y)).append(",");
+                sb.append(jsonObject.getInt(RkHandWriteUtils.JSON_KEY_X)).append(",");
+                sb.append(jsonObject.getInt(RkHandWriteUtils.JSON_KEY_Y)).append(",");
+                sb.append(jsonObject.getInt(RkHandWriteUtils.JSON_KEY_TOUCH_TYPE)+((penColor == 2) ? 4:0)).append(",");
+                sb.append(jsonObject.getInt(RkHandWriteUtils.JSON_KEY_PEN_WIDTH)).append(",");
+                if ((i+1) % 80 == 0) {
+                    //break;
+                    addPoint(callbackContext, sb.toString());
+                    sb.setLength(0);
+                }
+            }
+            if (sb.length() > 0) {
+                addPoint(callbackContext, sb.toString());
             }
             //jsonArray.getString()
             //this.setRubberWidth(callbackContext, width);
@@ -225,6 +242,11 @@ public class LeyuHandView extends CordovaPlugin {
     // 10.提供设置橡皮擦宽度接口
     private void setRubberWidth(CallbackContext callbackContext, int width) {
         RkHandWriteUtils.getInstance().setRubberWidth(width);
+    }
+
+    // 11.提供添加 point 接口
+    private void addPoint(CallbackContext callbackContext, String pointInfo) {
+        RkHandWriteUtils.getInstance().addPoint(pointInfo);
     }
     //lishunbo@leyu-tech.com add 2020/8/12 for  end
 

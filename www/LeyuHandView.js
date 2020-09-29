@@ -52,6 +52,6 @@ exports.setRubberWidth = function (arg0, success, error) {
     exec(success, error, "LeyuHandView", "setRubberWidth", [arg0]);
 };
 
-exoorts.addPoint = function (arg0, success, error) {
+exports.addPoint = function (arg0, success, error) {
     exec(success, error, "LeyuHandView", "addPoint", [arg0]);
 };
