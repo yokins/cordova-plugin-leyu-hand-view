@@ -229,12 +229,14 @@ public class LeyuHandView extends CordovaPlugin {
                 public void onTouchResult(JSONObject jsonObject) {
                     //callbackContext.success(jsonObject);
                     if (OPTION_SEND_TOGETHER) {
-                        jsonArray.put(jsonObject);
+                        //jsonArray.put(jsonObject);
                         if ("1".equals(jsonObject.optString(RkHandWriteUtils.JSON_KEY_TOUCH_UP, "0"))) {
                             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonArray);
                             pluginResult.setKeepCallback(true);
                             callbackContext.sendPluginResult(pluginResult);
                             jsonArray = new JSONArray();
+                        } else {
+                            jsonArray.put(jsonObject);
                         }
                     } else {
                         PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonObject);

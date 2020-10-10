@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-leyu-hand-view",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "上海世外智慧平板cordova hybrid app手写插件",
   "main": "index.js",
   "scripts": {
