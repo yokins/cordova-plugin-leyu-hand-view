@@ -51,7 +51,11 @@ exports.setPenWidth = function (arg0, success, error) {
 exports.setRubberWidth = function (arg0, success, error) {
     exec(success, error, "LeyuHandView", "setRubberWidth", [arg0]);
 };
-
+// 撤回使用
 exports.addPoint = function (arg0, arg1, success, error) {
     exec(success, error, "LeyuHandView", "addPoint", [arg0, arg1]);
 };
+// 设置是否是一次性传
+exports.setSendTogetherOn = function (arg, success, error) {
+    exec(success, error, "LeyuHandView", "setSendTogetherOn", [arg]);
+}

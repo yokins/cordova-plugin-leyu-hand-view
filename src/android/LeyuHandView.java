@@ -20,6 +20,11 @@ import org.json.JSONObject;
 public class LeyuHandView extends CordovaPlugin {
 
     private final static String TAG = "LeyuHandView";
+    private final static int MAX_POINT = 4000;
+
+    //parameters start
+    private boolean OPTION_SEND_TOGETHER = false;
+    //parameters end
 
     private RkHandWriteUtils.OnResultListener mResultListener = null;
     private Rect mHandWriteRect = null;
@@ -146,7 +151,11 @@ public class LeyuHandView extends CordovaPlugin {
         if (action.equals("addPoint")) {
             //int width = args.getInt(0);
             int penColor = args.getInt(0);
+            //Log.i(TAG, "penColor:" + penColor);
+            //Log.i(TAG, "jsonObject:" + args.toString());
             JSONArray jsonArray = args.getJSONArray(1);
+            //Log.i(TAG, "jsonArray.length:" + jsonArray.length());
+            //Log.i(TAG, "jsonArray:" + jsonArray.toString());
             JSONObject jsonObject;
             StringBuilder sb = new StringBuilder();
 
@@ -160,7 +169,7 @@ public class LeyuHandView extends CordovaPlugin {
                 sb.append(jsonObject.getInt(RkHandWriteUtils.JSON_KEY_Y)).append(",");
                 sb.append(jsonObject.getInt(RkHandWriteUtils.JSON_KEY_TOUCH_TYPE)+((penColor == 2) ? 4:0)).append(",");
                 sb.append(jsonObject.getInt(RkHandWriteUtils.JSON_KEY_PEN_WIDTH)).append(",");
-                if ((i+1) % 80 == 0) {
+                if ((i+1) % MAX_POINT == 0) {
                     //break;
                     addPoint(callbackContext, sb.toString());
                     sb.setLength(0);
@@ -171,6 +180,12 @@ public class LeyuHandView extends CordovaPlugin {
             }
             //jsonArray.getString()
             //this.setRubberWidth(callbackContext, width);
+            return true;
+        }
+
+        // 12.提供设置一次性传点开关接口
+        if (action.equals("setSendTogetherOn")) {
+            OPTION_SEND_TOGETHER = args.getBoolean(0);
             return true;
         }
         //lishunbo@leyu-tech.com add 2020/8/12 for  end
@@ -204,15 +219,28 @@ public class LeyuHandView extends CordovaPlugin {
     }
 
     // 5.提供打开RK专用手写进程接口
+    private JSONArray jsonArray = new JSONArray();
+
     private void runRkHandwriteProcess(Rect rect, final CallbackContext callbackContext) {
         if (callbackContext != null) {
+            //final JSONArray jsonArray = new JSONArray();
             mResultListener = new RkHandWriteUtils.OnResultListener() {
                 @Override
                 public void onTouchResult(JSONObject jsonObject) {
                     //callbackContext.success(jsonObject);
-                    PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonObject);
-                    pluginResult.setKeepCallback(true);
-                    callbackContext.sendPluginResult(pluginResult);
+                    if (OPTION_SEND_TOGETHER) {
+                        jsonArray.put(jsonObject);
+                        if ("1".equals(jsonObject.optString(RkHandWriteUtils.JSON_KEY_TOUCH_UP, "0"))) {
+                            PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonArray);
+                            pluginResult.setKeepCallback(true);
+                            callbackContext.sendPluginResult(pluginResult);
+                            jsonArray = new JSONArray();
+                        }
+                    } else {
+                        PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonObject);
+                        pluginResult.setKeepCallback(true);
+                        callbackContext.sendPluginResult(pluginResult);
+                    }
                 }
             };
         }
