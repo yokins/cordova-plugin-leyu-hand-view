@@ -1,5 +1,6 @@
 package com.wfl.leyu.handview;
 
+import android.app.LeyuManager;
 import android.graphics.Rect;
 import android.util.Log;
 
@@ -20,7 +21,7 @@ import org.json.JSONObject;
 public class LeyuHandView extends CordovaPlugin {
 
     private final static String TAG = "LeyuHandView";
-    private final static int MAX_POINT = 4000;
+    private final static int MAX_POINT = 4000;//4000 for 100000,400 for 10000
 
     //parameters start
     private boolean OPTION_SEND_TOGETHER = false;
@@ -188,6 +189,20 @@ public class LeyuHandView extends CordovaPlugin {
             OPTION_SEND_TOGETHER = args.getBoolean(0);
             return true;
         }
+
+        // 13.提供禁止和启用画线接口
+        if (action.equals("setDisableTouch")) {
+            boolean disabled = args.getBoolean(0);
+            this.setDisableTouch(callbackContext, disabled);
+            return true;
+        }
+
+        // 14.提供全屏刷新接口
+        if (action.equals("doAppFlash")) {
+            int mode = args.getInt(0);
+            this.doAppFlash(mode, callbackContext);
+            return true;
+        }
         //lishunbo@leyu-tech.com add 2020/8/12 for  end
 
         return false;
@@ -277,6 +292,16 @@ public class LeyuHandView extends CordovaPlugin {
     // 11.提供添加 point 接口
     private void addPoint(CallbackContext callbackContext, String pointInfo) {
         RkHandWriteUtils.getInstance().addPoint(pointInfo);
+    }
+
+    // 13.提供禁止和启用画线接口
+    private void setDisableTouch(CallbackContext callbackContext, boolean disabled) {
+        RkHandWriteUtils.getInstance().setDisableTouch(disabled);
+    }
+
+    // 14.提供全屏刷新接口
+    private void doAppFlash(int mode, CallbackContext callbackContext) {
+        LeyuManager.getInstance().doAppFlash(mode);
     }
     //lishunbo@leyu-tech.com add 2020/8/12 for  end
 

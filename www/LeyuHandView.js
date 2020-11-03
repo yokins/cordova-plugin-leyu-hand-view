@@ -58,4 +58,12 @@ exports.addPoint = function (arg0, arg1, success, error) {
 // 设置是否是一次性传
 exports.setSendTogetherOn = function (arg, success, error) {
     exec(success, error, "LeyuHandView", "setSendTogetherOn", [arg]);
-}
+};
+// 提供禁止和启用画线接口
+exports.setDisableTouch = function (arg, success, error) {
+    exec(success, error, "LeyuHandView", "setDisableTouch", [arg]);
+};
+// 刷新的问题
+exports.doAppFlash = function (arg, success, error) {
+    exec(success, error, "LeyuHandView", "doAppFlash", [arg]);
+};
