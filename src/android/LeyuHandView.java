@@ -203,6 +203,13 @@ public class LeyuHandView extends CordovaPlugin {
             this.doAppFlash(mode, callbackContext);
             return true;
         }
+
+        // 15.提供禁止和启用橡皮擦接口
+        if (action.equals("setDisableRubber")) {
+            boolean disabled = args.getBoolean(0);
+            this.setDisableTouch(callbackContext, disabled);
+            return true;
+        }
         //lishunbo@leyu-tech.com add 2020/8/12 for  end
 
         return false;
@@ -302,6 +309,11 @@ public class LeyuHandView extends CordovaPlugin {
     // 14.提供全屏刷新接口
     private void doAppFlash(int mode, CallbackContext callbackContext) {
         LeyuManager.getInstance().doAppFlash(mode);
+    }
+
+    // 15.提供禁止和启用橡皮擦功能接口
+    private void setDisableRubber(CallbackContext callbackContext, boolean disabled) {
+        RkHandWriteUtils.getInstance().setDisableRubber(disabled);
     }
     //lishunbo@leyu-tech.com add 2020/8/12 for  end
 

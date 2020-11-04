@@ -67,3 +67,7 @@ exports.setDisableTouch = function (arg, success, error) {
 exports.doAppFlash = function (arg, success, error) {
     exec(success, error, "LeyuHandView", "doAppFlash", [arg]);
 };
+// 刷新的问题
+exports.setDisableRubber = function (arg, success, error) {
+    exec(success, error, "LeyuHandView", "setDisableRubber", [arg]);
+};
