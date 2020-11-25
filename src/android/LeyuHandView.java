@@ -25,16 +25,22 @@ public class LeyuHandView extends CordovaPlugin {
 
     //parameters start
     private boolean OPTION_SEND_TOGETHER = false;
+    private static final int RECT_SIZE = 10;
     //parameters end
 
     private RkHandWriteUtils.OnResultListener mResultListener = null;
-    private Rect mHandWriteRect = null;
+    private Rect[] mHandWriteRect = new Rect[RECT_SIZE];
 
     @Override
     public void onResume(boolean multitasking) {
         if (mResultListener != null) {
             Log.i(TAG, "onResume:mResultListener exist!");
-            runRkHandwriteProcess(mHandWriteRect, null);
+            runRkHandwriteProcess(mHandWriteRect[0], null);
+            for (int i=1; i<RECT_SIZE; i++) {
+                if (mHandWriteRect[i] != null) {
+                    addRect(null, i, mHandWriteRect[i]);
+                }
+            }
         } else {
             Log.i(TAG, "onResume:mResultListener is null!");
         }
@@ -99,20 +105,20 @@ public class LeyuHandView extends CordovaPlugin {
         // 5.提供打开RK手写进程接口
         if (action.equals("runRkHandwriteProcess")) {
             JSONObject rectObject = args.getJSONObject(0);
-            mHandWriteRect = null;
+            mHandWriteRect[0] = null;
             if (rectObject != null) {
-                mHandWriteRect = new Rect();
-                mHandWriteRect.left = rectObject.getInt("left");
-                mHandWriteRect.top = rectObject.getInt("top");
-                mHandWriteRect.right = rectObject.getInt("right");
-                mHandWriteRect.bottom = rectObject.getInt("bottom");
-                Log.i(TAG, "runRkHandwriteProcess-left:"+mHandWriteRect.left+"  /top:"+mHandWriteRect.top
-                        +"  /right:"+mHandWriteRect.right+"  /bottom:"+mHandWriteRect.bottom);
+                mHandWriteRect[0] = new Rect();
+                mHandWriteRect[0].left = rectObject.getInt("left");
+                mHandWriteRect[0].top = rectObject.getInt("top");
+                mHandWriteRect[0].right = rectObject.getInt("right");
+                mHandWriteRect[0].bottom = rectObject.getInt("bottom");
+                Log.i(TAG, "runRkHandwriteProcess-left:"+mHandWriteRect[0].left+"  /top:"+mHandWriteRect[0].top
+                        +"  /right:"+mHandWriteRect[0].right+"  /bottom:"+mHandWriteRect[0].bottom);
             } else {
                 Log.i(TAG, "runRkHandwriteProcess-no rect");
             }
 
-            this.runRkHandwriteProcess(mHandWriteRect, callbackContext);
+            this.runRkHandwriteProcess(mHandWriteRect[0], callbackContext);
             return true;
         }
 
@@ -164,6 +170,7 @@ public class LeyuHandView extends CordovaPlugin {
                 jsonObject = jsonArray.getJSONObject(i);
                 //Log.i(TAG, "penColor:" + penColor + "  /jsonObject:" + jsonObject.toString());
 
+                sb.append(jsonObject.getInt(RkHandWriteUtils.JSON_KEY_RECT_ID)).append(",");
                 sb.append(jsonObject.getInt(RkHandWriteUtils.JSON_KEY_LAST_X)).append(",");
                 sb.append(jsonObject.getInt(RkHandWriteUtils.JSON_KEY_LAST_Y)).append(",");
                 sb.append(jsonObject.getInt(RkHandWriteUtils.JSON_KEY_X)).append(",");
@@ -208,6 +215,31 @@ public class LeyuHandView extends CordovaPlugin {
         if (action.equals("setDisableRubber")) {
             boolean disabled = args.getBoolean(0);
             this.setDisableTouch(callbackContext, disabled);
+            return true;
+        }
+
+        // 16.提供增加手写区域接口
+        if (action.equals("addRect")) {
+            int rectId = args.getInt(0);
+            JSONObject rectObject = args.getJSONObject(1);
+            if (mHandWriteRect[rectId] != null) {
+                Log.i(TAG, "addRect fail, this id " + rectId + " is already add");
+                return true;
+            }
+            //mHandWriteRect = null;
+            if (rectObject != null) {
+                mHandWriteRect[rectId] = new Rect();
+                mHandWriteRect[rectId].left = rectObject.getInt("left");
+                mHandWriteRect[rectId].top = rectObject.getInt("top");
+                mHandWriteRect[rectId].right = rectObject.getInt("right");
+                mHandWriteRect[rectId].bottom = rectObject.getInt("bottom");
+                Log.i(TAG, "addRect-left:"+mHandWriteRect[rectId].left+"  /top:"+mHandWriteRect[rectId].top
+                        +"  /right:"+mHandWriteRect[rectId].right+"  /bottom:"+mHandWriteRect[rectId].bottom);
+                this.addRect(callbackContext, rectId, mHandWriteRect[rectId]);
+            } else {
+                Log.i(TAG, "addRect-no rect to add");
+            }
+
             return true;
         }
         //lishunbo@leyu-tech.com add 2020/8/12 for  end
@@ -314,6 +346,11 @@ public class LeyuHandView extends CordovaPlugin {
     // 15.提供禁止和启用橡皮擦功能接口
     private void setDisableRubber(CallbackContext callbackContext, boolean disabled) {
         RkHandWriteUtils.getInstance().setDisableRubber(disabled);
+    }
+
+    // 16.提供增加手写区域接口
+    private void addRect(CallbackContext callbackContext, int id, Rect rect) {
+        RkHandWriteUtils.getInstance().addRect(id, rect);
     }
     //lishunbo@leyu-tech.com add 2020/8/12 for  end
 

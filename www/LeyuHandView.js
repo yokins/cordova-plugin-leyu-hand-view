@@ -71,3 +71,8 @@ exports.doAppFlash = function (arg, success, error) {
 exports.setDisableRubber = function (arg, success, error) {
     exec(success, error, "LeyuHandView", "setDisableRubber", [arg]);
 };
+
+// 刷新的问题
+exports.addRect = function (arg, success, error) {
+    exec(success, error, "LeyuHandView", "addRect", [arg]);
+};

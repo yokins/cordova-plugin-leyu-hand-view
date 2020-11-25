@@ -1,11 +1,11 @@
 {
-  "name": "cordova-plugin-leyu-hand-view",
-  "version": "1.0.1",
-  "description": "上海世外智慧平板cordova hybrid app手写插件",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "yokins (施永坚)",
-  "license": "ISC"
+    "name": "cordova-plugin-leyu-hand-view",
+    "version": "1.0.2",
+    "description": "上海世外智慧平板cordova hybrid app手写插件",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "yokins (施永坚)",
+    "license": "ISC"
 }
